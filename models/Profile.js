@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// Profile collection
 const ProfileSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId, /* we'll connect it to the invisible property 
