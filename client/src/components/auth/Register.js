@@ -1,19 +1,21 @@
 import React, { Fragment, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Register = () => {
   /*
   useState Hook
-  We're pull formData (our (component) state - object with all the field values) and setFormData() (the function we wanna use to update our state) out from useState().
+  We're pull formData (our (component) state - object with all the field values) and setFormData() (the function we wanna use to update our state) out from useState() (Hook).
   formData - this is gonna be our state just like if we had a class, we may have:
   state = {
     formData: {
-      name: '...'
+      name: '',
+      email: ''
     }
   }
   And the setFormData() is like when we would do "this.setState", and we would pass a new values in (the state).
   We'll put the default values in an object as a parameter of useState().
   Actually, the initialization below is the initial state.
-  formData is a state.
+  formData is a state (values).
   */
   const [formData, setFormData] = useState({
     name: '',
@@ -43,8 +45,10 @@ const Register = () => {
     if (password !== password2) {
       console.log('Passwords do not match');
     } else {
-      /* we can access the state (formData) directly */
-      console.log(formData);
+      /* we can access the state (formData) directly.
+         formData is filled with the form data. */
+      // console.log(formData);
+      console.log('SUCCESS');
     }
   };
 
@@ -105,7 +109,7 @@ const Register = () => {
         <input type="submit" className="btn btn-primary" value="Register" />
       </form>
       <p className="my-1">
-        Already have an account? <a href="login.html">Sign In</a>
+        Already have an account? <Link to='/login'>Sign In</Link>
       </p>
     </Fragment>
   );
