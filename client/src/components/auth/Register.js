@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 /* Bring in the "setAlert" action */
 import { setAlert } from '../../actions/alert';
+/* Bring in the "register" action */
+import { register } from '../../actions/auth';
 import PropTypes from 'prop-types';
 
 /* 
@@ -16,7 +18,7 @@ import PropTypes from 'prop-types';
   And the operation of destructuring looks this way: { setAlert } (as a parameter
     of the` Register component's function).
 */
-const Register = ({ setAlert }) => {
+const Register = ({ setAlert, register }) => {
   /*
   useState Hook
   We're pull formData (our (component) state - object with all the field values) and setFormData() (the function we wanna use to update our state) out from useState() (Hook).
@@ -30,7 +32,7 @@ const Register = ({ setAlert }) => {
   And the setFormData() is like when we would do "this.setState", and we would pass a new values in (the state).
   We'll put the default values in an object as a parameter of useState().
   Actually, the initialization below is the initial state.
-  formData is a state (values).
+  formData is a (component) state (values).
   */
   const [formData, setFormData] = useState({
     name: '',
@@ -70,7 +72,8 @@ const Register = ({ setAlert }) => {
       /* we can access the state (formData) directly.
          formData is filled with the form data. */
       // console.log(formData);
-      console.log('SUCCESS');
+      // console.log('SUCCESS');
+      register({ name, email, password });
     }
   };
 
@@ -90,8 +93,7 @@ const Register = ({ setAlert }) => {
             placeholder="Name" 
             name="name" 
             value={name} 
-            onChange={e => onChange(e)}
-            required 
+            onChange={e => onChange(e)} 
           />
         </div>
         <div className="form-group">
@@ -101,7 +103,6 @@ const Register = ({ setAlert }) => {
             name="email" 
             value={email} 
             onChange={e => onChange(e)}
-            required
           />
           <small className="form-text"
             >This site uses Gravatar so if you want a profile image, use a
@@ -113,7 +114,6 @@ const Register = ({ setAlert }) => {
             type="password"
             placeholder="Password"
             name="password"
-            minLength="6"
             value={password} 
             onChange={e => onChange(e)}
           />
@@ -123,7 +123,6 @@ const Register = ({ setAlert }) => {
             type="password"
             placeholder="Confirm Password"
             name="password2"
-            minLength="6"
             value={password2} 
             onChange={e => onChange(e)}
           />
@@ -154,8 +153,9 @@ const Register = ({ setAlert }) => {
 */
 
 Register.propTypes = {
-  /* we're gonna have setAlert as a Prop Type */
-  setAlert: PropTypes.func.isRequired
+  /* we're gonna have setAlert and register as Prop Types */
+  setAlert: PropTypes.func.isRequired,
+  register: PropTypes.func.isRequired
 }
 
 /* we have to export "connect()" with the "setAlert" action in order to use it, and then 
@@ -163,4 +163,8 @@ this action is available within "props". So we destructured "setAlert", pulled i
 we called it, when the passwords don't match. And we sent the message and the alert type. 
 as a first parameter, we don't have a "mapStateToProps()" function,
 but as a second parameter we have (call) a "setAlert" action. */
-export default connect(null, { setAlert })(Register);
+
+export default connect(
+  null, 
+  { setAlert, register }
+)(Register);
