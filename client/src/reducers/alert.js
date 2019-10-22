@@ -22,13 +22,20 @@ In addition to these two cases we just wanna default.
 So as far as the default, we're just gonna return the state. So every reducer we create is gonna have a "default" case of just "return state".
 Instead of writing "action.type" and "action.payload" we'll just destructure in the beginning of the function body.
 To sum up, we dispatch the action type of "SET_ALERT" and we return the array with the payload (with the new alert). And "REMOVE_ALERT" is gonna filter through and it's gonna return all alerts except for the one (id) that matches the payload (id).
+When alert reducer get the "SET_ALERT" action type, and alert reducer will add this alert to the state, which initially is just an empty array.
 */
 export default function (state = initialState, action) {
 const { type, payload } = action;
 
 switch (type) {
+  /* reducer adds new alert to the state (to the array) */
   case SET_ALERT:
     return [...state, payload];
+  /* reducer's just gonna filter out that payload (as an id). it's gonna
+     match that id. or it's saying: 
+     "as long as the ID doesn't match the payload then - return it."
+     so it'll return everything but that. 
+  */
   case REMOVE_ALERT:
     return state.filter(alert => alert.id !== payload);
   default:

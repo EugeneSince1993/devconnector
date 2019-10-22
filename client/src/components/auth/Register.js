@@ -1,7 +1,22 @@
 import React, { Fragment, useState } from 'react';
+/* the item below connects this component to the Redux.
+we do this so that we could work with Redux. */
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+/* Bring in the "setAlert" action */
+import { setAlert } from '../../actions/alert';
+import PropTypes from 'prop-types';
 
-const Register = () => {
+/* 
+  The props come in as a Register component's parameter.
+  So we should be able to do "props.alert".
+  That was a previous step. Now we'll do destructuring.
+  UPDATE:
+  Now instead "props.setAlert" we can use simply "alert".
+  And the operation of destructuring looks this way: { setAlert } (as a parameter
+    of the` Register component's function).
+*/
+const Register = ({ setAlert }) => {
   /*
   useState Hook
   We're pull formData (our (component) state - object with all the field values) and setFormData() (the function we wanna use to update our state) out from useState() (Hook).
@@ -43,7 +58,14 @@ const Register = () => {
        With it we can access the state anywhere. We shouldn't pass the state in somewhere.
        And we can simply update the state by calling "setFormData()". */
     if (password !== password2) {
-      console.log('Passwords do not match');
+      /*
+        "props.setAlert()" method pass the 'Passwords do not match' as a message to our actions
+        ("alert.js" - file with alert action), alerType and id. 
+        UPDATE:
+        Because of we did destructuring above, now we use simply "setAlert" instead of
+        "props.setAlert"
+      */
+      setAlert('Passwords do not match', 'danger');
     } else {
       /* we can access the state (formData) directly.
          formData is filled with the form data. */
@@ -115,4 +137,30 @@ const Register = () => {
   );
 };
 
-export default Register;
+
+/* 
+  whenever we use connect(), we need to export it. 
+  whenever we bring in an action, when we wanna use it, you have to
+  actually pass it in to connect().
+  connect() takes in 2 things. one is any state that you wanna map. so
+  if we want to get state from alert or profile or anything else, we put that as
+  a first parameter. we're just gonna put "null", because we don't need anything right now.
+  the second parameter is gonna be an object with any actions you wanna use - in our case, "setAlert".
+  This will alow us to access "props.setAlert". And the "props" come in as a Register
+  component's parameter.
+  So we should be able to do "props.alert".
+  UPDATE:
+  That was a previous step. Now we'll do destructuring.
+*/
+
+Register.propTypes = {
+  /* we're gonna have setAlert as a Prop Type */
+  setAlert: PropTypes.func.isRequired
+}
+
+/* we have to export "connect()" with the "setAlert" action in order to use it, and then 
+this action is available within "props". So we destructured "setAlert", pulled it out the "props",
+we called it, when the passwords don't match. And we sent the message and the alert type. 
+as a first parameter, we don't have a "mapStateToProps()" function,
+but as a second parameter we have (call) a "setAlert" action. */
+export default connect(null, { setAlert })(Register);
