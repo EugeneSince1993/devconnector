@@ -4,8 +4,53 @@ import axios from 'axios';
 import { setAlert } from './alert';
 import {
   REGISTER_SUCCESS,
-  REGISTER_FAIL
+  REGISTER_FAIL,
+  USER_LOADED,
+  AUTH_ERROR
 } from './types';
+import setAuthToken from '../utils/setAuthToken';
+
+/*
+Load User 
+*/
+export const loadUser = () => async dispatch => {
+  /* We need to check to see if there's a token and
+  there is, what we're gonna do is put it (the token)
+  in a global header. We know how we have to send a 
+  header with that "x-auth-token". If we have a token in
+  the local storage, we just wanna always send that.
+  We'll create a file to do that.
+  We're gonna check the local storage. We're gonna do this here 
+  and in the main "App.js" file. So that will set the header, the token if there is
+  one.
+  This only check the first time that user loads.
+  */
+  if (localStorage.token) {
+    setAuthToken(localStorage.token);
+  }
+  /* Then we will make our request.
+     Endpoint that we wanna hit is "/api/auth"  */
+
+  try {
+    const res = await axios.get('/api/auth');
+
+    /* If everything goes ok, then we wanna dispatch "USER_LOADED".
+    Type will be "USER_LOADED", and then the payload is gonna be
+    the data that's sent from that route, which is the user. So we'll
+    use "res.data".
+    So it will send the payload (which will be the user) to this
+    action type in the reducer.
+     */
+    dispatch({
+      type: USER_LOADED,
+      payload: res.data
+    });
+  } catch (err) {
+    dispatch({
+      type: AUTH_ERROR
+    });
+  }
+};
 
 /* 
 Register User
@@ -31,7 +76,7 @@ export const register = ({ name, email, password }) =>
       whatever, then we wanna dispatch "REGISTER_SUCCESS".
       The payload will be the data that we get back which
       in this case is gonna be the token. We get the
-      token back on a successful the response. */
+      token back on a successful response. */
       dispatch({
         type: REGISTER_SUCCESS,
         payload: res.data
@@ -53,7 +98,7 @@ export const register = ({ name, email, password }) =>
 
       /* and we don't need a payload here.
          if we look at "REGISTER_FAIL" in reducer,
-         we don't so anything with a payload so we
+         we don't do anything with a payload so we
          don't have to send it. */
       dispatch({
         type: REGISTER_FAIL

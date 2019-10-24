@@ -1,6 +1,8 @@
 import { 
   REGISTER_SUCCESS,
-  REGISTER_FAIL
+  REGISTER_FAIL,
+  USER_LOADED,
+  AUTH_ERROR
  } from '../actions/types';
 
     /*  
@@ -23,7 +25,7 @@ const initialState = {
       we wanna make sure that, for instance, when we load 
       a user, and to see if the user is authenticated, we
       wanna make sure that the loading is done. So that we've already made
-      a request to the backend and go to response. We'll set "loading" to
+      a request to the backend and go to (get) response. We'll set "loading" to
       "true" by the default. And when we make our request and get the data
       or get the response, then we'll set it to false so we know
       that it has been loaded.
@@ -46,20 +48,35 @@ export default function (state = initialState, action) {
   
   /* run a switch on the type. */
   switch (type) {
-    /* we wanna test the case of "REGISTER_SUCCESS". if the
+     /* that will load the user. */
+   case USER_LOADED:
+      return {
+         ...state,
+         /* that means that the token works, we're now logged in. */
+         isAuthenticated: true,
+         loading: false,
+         /* because that payload includes the user. and that will be
+         the name, the email, the avatar. everything but the password.
+         because in our backend "auth" route we're doing:
+         "const user = await User.findById(req.user.id).select('-password');",
+         so we're not sending the password.
+         */
+         user: payload
+      };
+   /* we wanna test the case of "REGISTER_SUCCESS". if the
        register is successful, we get the token back, so we
        want the user to just get logged in right away.
        We're gonna set local storage and we're gonna stew (set)
        a "setItem", because we want to put the token that's
-       returned inside local storage. If we've got token above,
+       returned inside a local storage. If we've got token above,
        we would put in the state before. "payload" is an object.
        We'll set a token to the "payload.token".
        "...state" means "whatever is currently in the state",
        because state is immutable.
        In return we've set "loading" to "false", because we've
-       got a response, it has been loaded.
-    */ 
-    case REGISTER_SUCCESS:
+       got a response, it (user) has been loaded.
+   */ 
+   case REGISTER_SUCCESS:
       localStorage.setItem('token', payload.token);
       return {
         ...state,
@@ -67,14 +84,21 @@ export default function (state = initialState, action) {
         isAuthenticated: true,
         loading: false
       };
-    case REGISTER_FAIL:
+   case REGISTER_FAIL:
+   case AUTH_ERROR:
       /* for REGISTER_FAIL we're gonna remove anything that's
          in local storage in that token. Because if it is a
          failed login, I just wanna remove the token completely.
-         With "removeItem()" we remove token from local storage.
+         With "removeItem()" we remove token from the local storage.
          With "token: null" we're setting the value to "null".
          "loading: false" because even it's fail, it would still
-         downloading.  */
+         downloading.
+         for AUTH_ERROR - it's gonna do the same exact thing.
+         It just clears all the "auth" state and it also clears the
+         token from the local storage.
+         Basically we don't wanna have a token that isn't valid in
+         the local storage ever.
+      */
       localStorage.removeItem('token');
       return {
         ...state,
@@ -82,7 +106,7 @@ export default function (state = initialState, action) {
         isAuthenticated: false,
         loading: false
       };
-    default:
+   default:
       return state;
   }
 };

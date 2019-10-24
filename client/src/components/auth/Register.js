@@ -14,9 +14,9 @@ import PropTypes from 'prop-types';
   So we should be able to do "props.alert".
   That was a previous step. Now we'll do destructuring.
   UPDATE:
-  Now instead "props.setAlert" we can use simply "alert".
+  Now instead "props.setAlert" we can use simply "setAlert".
   And the operation of destructuring looks this way: { setAlert } (as a parameter
-    of the` Register component's function).
+    of the Register component's function).
 */
 const Register = ({ setAlert, register }) => {
   /*
@@ -137,8 +137,8 @@ const Register = ({ setAlert, register }) => {
 };
 
 
-/* 
-  whenever we use connect(), we need to export it. 
+/*
+    whenever we use connect(), we need to export it. 
   whenever we bring in an action, when we wanna use it, you have to
   actually pass it in to connect().
   connect() takes in 2 things. one is any state that you wanna map. so
@@ -149,11 +149,11 @@ const Register = ({ setAlert, register }) => {
   component's parameter.
   So we should be able to do "props.alert".
   UPDATE:
-  That was a previous step. Now we'll do destructuring.
-*/
+  That was a previous step. Now we'll do destructuring. 
+ */
 
 Register.propTypes = {
-  /* we're gonna have setAlert and register as Prop Types */
+/* we're gonna have setAlert and register as Prop Types */
   setAlert: PropTypes.func.isRequired,
   register: PropTypes.func.isRequired
 }
@@ -166,5 +166,5 @@ but as a second parameter we have (call) a "setAlert" action. */
 
 export default connect(
   null, 
-  { setAlert, register }
+    { setAlert, register }
 )(Register);
