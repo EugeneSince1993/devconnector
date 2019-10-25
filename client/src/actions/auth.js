@@ -6,7 +6,9 @@ import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
   USER_LOADED,
-  AUTH_ERROR
+  AUTH_ERROR,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL
 } from './types';
 import setAuthToken from '../utils/setAuthToken';
 
@@ -81,6 +83,10 @@ export const register = ({ name, email, password }) =>
         type: REGISTER_SUCCESS,
         payload: res.data
       });
+
+      /* We need to dispatch the "loadUser()" action after signing up.
+      Just so that runs immediately. */
+      dispatch(loadUser());
     } catch (err) {
       /* we get the "errors" array */
       const errors = err.response.data.errors;
@@ -104,4 +110,48 @@ export const register = ({ name, email, password }) =>
         type: REGISTER_FAIL
       });
     }
+};
+
+/*
+  Login User
+  Since there are just two fields as the parameters, we won't even use an object. It will just take in an email and password. 
+*/
+export const login = ( email, password ) => async dispatch => {
+  /* we're sending data so we wanna "config". */
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+
+  /* we're gonna create an object from the email and password, pass it in to
+  the JSON.stringify(). */
+  const body = JSON.stringify({ email, password });
+
+  try {
+    const res = await axios.post('/api/auth', body, config);
+
+    /* If it's a success, we're gonna have an action type "LOGIN_SUCCESS".
+    And we're gonna send the data as the payload. */
+    dispatch({
+      type: LOGIN_SUCCESS,
+      payload: res.data
+    });
+
+    /* We need to dispatch the "loadUser()" action after logging in.
+    Just so that runs immediately. */
+    dispatch(loadUser());
+  } catch (err) {
+    const errors = err.response.data.errors;
+
+    /* We're sending an alert if we get errors. Because we have some body validation
+    for the login as well. */
+    if (errors) {
+      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    dispatch({
+      type: LOGIN_FAIL
+    });
+  }
 };

@@ -2,7 +2,9 @@ import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
   USER_LOADED,
-  AUTH_ERROR
+  AUTH_ERROR,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL
  } from '../actions/types';
 
     /*  
@@ -39,7 +41,8 @@ const initialState = {
    user: null
 }
 
-/* And the reason we do this is just so we don't have to put 
+/* That's actually our reducer.
+   And the reason we do this is just so we don't have to put 
    all this information inside of the parameter. So we created a
    variable and made it nice and neat. And then we're gonna take
    the action that's dispatched. */
@@ -76,7 +79,10 @@ export default function (state = initialState, action) {
        In return we've set "loading" to "false", because we've
        got a response, it (user) has been loaded.
    */ 
+   /* To reiterate, it's gonna put the token in the local storage. It's gonna set
+   "isAuthenticated" to "true", set the payload and set "loading" to false.  */
    case REGISTER_SUCCESS:
+   case LOGIN_SUCCESS:
       localStorage.setItem('token', payload.token);
       return {
         ...state,
@@ -86,6 +92,7 @@ export default function (state = initialState, action) {
       };
    case REGISTER_FAIL:
    case AUTH_ERROR:
+   case LOGIN_FAIL:
       /* for REGISTER_FAIL we're gonna remove anything that's
          in local storage in that token. Because if it is a
          failed login, I just wanna remove the token completely.
@@ -99,6 +106,8 @@ export default function (state = initialState, action) {
          Basically we don't wanna have a token that isn't valid in
          the local storage ever.
       */
+     /* To reiterate - it's gonna remove the token and it's gonna set everything
+     to "null". */
       localStorage.removeItem('token');
       return {
         ...state,

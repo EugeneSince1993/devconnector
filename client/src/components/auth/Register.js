@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 /* the item below connects this component to the Redux.
 we do this so that we could work with Redux. */
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 /* Bring in the "setAlert" action */
 import { setAlert } from '../../actions/alert';
 /* Bring in the "register" action */
@@ -18,7 +18,7 @@ import PropTypes from 'prop-types';
   And the operation of destructuring looks this way: { setAlert } (as a parameter
     of the Register component's function).
 */
-const Register = ({ setAlert, register }) => {
+const Register = ({ setAlert, register, isAuthenticated }) => {
   /*
   useState Hook
   We're pull formData (our (component) state - object with all the field values) and setFormData() (the function we wanna use to update our state) out from useState() (Hook).
@@ -77,6 +77,13 @@ const Register = ({ setAlert, register }) => {
     }
   };
 
+  // Redirect if logged in
+  /* And with React Router we can do <Redirect />, and then add a "to" prop. And we'll redirect to
+  "/dashboard". We haven't created that route yet but that's ultimately where we're gonna go. */
+  if (isAuthenticated) {
+    return <Redirect to='/dashboard' />;
+  }
+
   return (
     <Fragment>
       <h1 className="large text-primary">Sign Up</h1>
@@ -104,10 +111,9 @@ const Register = ({ setAlert, register }) => {
             value={email} 
             onChange={e => onChange(e)}
           />
-          <small className="form-text"
-            >This site uses Gravatar so if you want a profile image, use a
-            Gravatar email</small
-          >
+          <small className="form-text">This site uses Gravatar so if you want a profile image, use a
+            Gravatar email
+          </small>
         </div>
         <div className="form-group">
           <input
@@ -136,35 +142,46 @@ const Register = ({ setAlert, register }) => {
   );
 };
 
-
-/*
-    whenever we use connect(), we need to export it. 
-  whenever we bring in an action, when we wanna use it, you have to
-  actually pass it in to connect().
-  connect() takes in 2 things. one is any state that you wanna map. so
-  if we want to get state from alert or profile or anything else, we put that as
-  a first parameter. we're just gonna put "null", because we don't need anything right now.
-  the second parameter is gonna be an object with any actions you wanna use - in our case, "setAlert".
-  This will alow us to access "props.setAlert". And the "props" come in as a Register
-  component's parameter.
-  So we should be able to do "props.alert".
-  UPDATE:
-  That was a previous step. Now we'll do destructuring. 
- */
-
+// Property validation
 Register.propTypes = {
 /* we're gonna have setAlert and register as Prop Types */
   setAlert: PropTypes.func.isRequired,
-  register: PropTypes.func.isRequired
+  register: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool
 }
 
-/* we have to export "connect()" with the "setAlert" action in order to use it, and then 
+/* We need to get the "auth" state into the component.
+   And now it will give us everything - all the properties from the initialState of the
+   "auth.js" reducer:
+   auth: state.auth
+   But all we need is a "isAuthenticated" property, we need to check this value to see if we're authenticated. So we'll type this way:
+   isAuthenticated: state.auth.isAuthenticated
+   Now isAuthenticated is a prop, so we'll add it to the PropTypes.
+   And since isAuthenticated now is a prop, we need to add it as a parameter in the main (component) function.
+*/
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+/*
+whenever we use connect(), we need to export it. 
+whenever we bring in an action, when we wanna use it, you have to
+actually pass it in to connect().
+connect() takes in 2 things. one is any state that you wanna map. so
+if we want to get state from alert or profile or anything else, we put that as
+a first parameter. we're just gonna put "null", because we don't need anything right now.
+the second parameter is gonna be an object with any actions you wanna use - in our case, "setAlert".
+This will alow us to access "props.setAlert". And the "props" come in as a Register
+component's parameter.
+So we should be able to do "props.alert".
+UPDATE:
+That was a previous step. Now we'll do destructuring. 
+We have to export "connect()" with the "setAlert" action in order to use it, and then 
 this action is available within "props". So we destructured "setAlert", pulled it out the "props",
 we called it, when the passwords don't match. And we sent the message and the alert type. 
-as a first parameter, we don't have a "mapStateToProps()" function,
-but as a second parameter we have (call) a "setAlert" action. */
-
+as a first parameter, we have a "mapStateToProps()" function,
+and as a second parameter we have (call) a "setAlert" action. */
 export default connect(
-  null, 
-    { setAlert, register }
+  mapStateToProps, 
+  { setAlert, register }
 )(Register);

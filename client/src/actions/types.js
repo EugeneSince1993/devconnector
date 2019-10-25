@@ -10,3 +10,5 @@ export const USER_LOADED = 'USER_LOADED';
 /* If something goes wrong, if the token doesn't
 match or whatever. */
 export const AUTH_ERROR = 'AUTH_ERROR';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_FAIL = 'LOGIN_FAIL';

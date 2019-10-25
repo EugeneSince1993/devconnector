@@ -1,7 +1,12 @@
 import React, { Fragment, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+// Bring in the "login" action
+import { login } from '../../actions/auth';
 
-const Login = () => {
+/* Since the "login" action is a prop, we'll destructure it - pull it out of props. */
+const Login = ({ login, isAuthenticated }) => {
     /*
   useState Hook
   We're pull formData (our (component) state - object with all the field values) and setFormData() (the function we wanna use to update our state) out from useState().
@@ -37,8 +42,16 @@ const Login = () => {
 
   const onSubmit = e => {
     e.preventDefault();
-    console.log('SUCCESS');
+    // console.log('SUCCESS');
+    login(email, password);
   };
+
+  // Redirect if logged in
+  /* And with React Router we can do <Redirect />, and then add a "to" prop. And we'll redirect to
+  "/dashboard". We haven't created that route yet but that's ultimately where we're gonna go. */
+  if (isAuthenticated) {
+    return <Redirect to='/dashboard' />;
+  }
 
   return (
     <Fragment>
@@ -73,4 +86,29 @@ const Login = () => {
   );
 };
 
-export default Login;
+// Property validation
+Login.propTypes = {
+  login: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool
+}
+
+/* We need to get the "auth" state into the component.
+   And now it will give us everything - all the properties from the initialState of the
+   "auth.js" reducer:
+   auth: state.auth
+   But all we need is a "isAuthenticated" property, we need to check this value to see if we're authenticated. So we'll type this way:
+   isAuthenticated: state.auth.isAuthenticated
+   Now isAuthenticated is a prop, so we'll add it to the PropTypes.
+   And since isAuthenticated now is a prop, we need to add it as a parameter in the main (component) function.
+   */
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+/* The first argument is a "mapStateToProps()" function.
+   As the second argument we have actions.
+   Now "login" action is a prop. So we'll add PropTypes */
+export default connect(
+  mapStateToProps,
+  { login }
+)(Login);
