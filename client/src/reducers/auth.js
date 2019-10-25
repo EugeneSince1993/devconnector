@@ -4,7 +4,8 @@ import {
   USER_LOADED,
   AUTH_ERROR,
   LOGIN_SUCCESS,
-  LOGIN_FAIL
+  LOGIN_FAIL,
+  LOGOUT
  } from '../actions/types';
 
     /*  
@@ -93,6 +94,7 @@ export default function (state = initialState, action) {
    case REGISTER_FAIL:
    case AUTH_ERROR:
    case LOGIN_FAIL:
+   case LOGOUT:
       /* for REGISTER_FAIL we're gonna remove anything that's
          in local storage in that token. Because if it is a
          failed login, I just wanna remove the token completely.

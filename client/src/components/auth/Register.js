@@ -148,7 +148,7 @@ Register.propTypes = {
   setAlert: PropTypes.func.isRequired,
   register: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool
-}
+};
 
 /* We need to get the "auth" state into the component.
    And now it will give us everything - all the properties from the initialState of the
