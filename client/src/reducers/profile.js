@@ -1,6 +1,7 @@
 import {
   GET_PROFILE,
-  PROFILE_ERROR
+  PROFILE_ERROR,
+  CLEAR_PROFILE
 } from '../actions/types';
 
 /* default values */
@@ -38,6 +39,15 @@ export default function (state = initialState, action) {
         ...state,
         /* We're sending that object with the message and the status (in the action function). */
         error: payload,
+        loading: false
+      };
+    case CLEAR_PROFILE:
+      return {
+        ...state,
+        /* We just set the "profile" back to "null" */
+        profile: null,
+        /* The profile could have GitHub repositories so we'll set the "repos" back to an "empty array". */
+        repos: [],
         loading: false
       };
     default:

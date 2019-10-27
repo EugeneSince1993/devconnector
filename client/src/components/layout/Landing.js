@@ -1,7 +1,15 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+/* We bring in "connect()", because we need to interact with the state to see if we're logged in. */
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-const Landing = () => {
+/* By destructuring we can use "isAuthenticated" instead of "props.isAuthenticated". */
+const Landing = ({ isAuthenticated }) => {
+  if (isAuthenticated) {
+    return <Redirect to='/dashboard' />;
+  }
+
   return (
     <section className="landing">
     <div className="dark-overlay">
@@ -21,4 +29,15 @@ const Landing = () => {
   )
 }
 
-export default Landing;
+Landing.propTypes = {
+  isAuthenticated: PropTypes.bool
+};
+
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+/* We don't have any action here. */
+export default connect(
+  mapStateToProps
+)(Landing);

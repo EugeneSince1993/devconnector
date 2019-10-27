@@ -13,6 +13,12 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   const authLinks = (
     <ul>
       <li>
+        <Link to='/dashboard'>
+          <i className="fas fa-user"></i>{' '}
+          <span className="hide-sm">Dashboard</span>
+        </Link>
+      </li>
+      <li>
         {/* "#!" will just have the link to go nowhere (JSX syntax) */}
         <a onClick={logout} href='#!'>
           <i className="fas fa-sign-out-alt"></i>{' '}
