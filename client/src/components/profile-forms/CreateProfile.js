@@ -1,8 +1,14 @@
 import React, { Fragment, useState } from 'react';
+/* Just like we passed in the "history" object (in the "profile" actions file), we have to use something called "withRouter". "withRouter" will allow us to redirect from the action and use the "history" object. */
+import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+// Bring in "createProfile()" action
+import { createProfile } from '../../actions/profile';
 
-const CreateProfile = () => {
+/* We destructure the action of the "createProfile" and the "history" object from the "props".
+So this "createProfile" action we need to call on the form submit. */
+const CreateProfile = ({ createProfile, history }) => {
   /* In here we'll put the default values in the fields.
   That's the "formData" state with the default values.
   "setFormData" is a method to update the state. */
@@ -48,6 +54,12 @@ const CreateProfile = () => {
     [e.target.name]: e.target.value
   });
 
+  const onSubmit = e => {
+    e.preventDefault();
+    /* We're submitting all the fields that are in that "formData" state. */
+    createProfile(formData, history);
+  };
+
   return (
     <Fragment>
       <h1 className="large text-primary">
@@ -58,7 +70,7 @@ const CreateProfile = () => {
         Let's get some information to make your profile stand out
       </p>
       <small>* = required fields</small>
-      <form className="form">
+      <form className="form" onSubmit={e => onSubmit(e)}>
         <div className="form-group">
           {/* All of our social inputs will have "onChange" event handler. */}
           <select 
@@ -230,8 +242,15 @@ const CreateProfile = () => {
   );
 };
 
+/* For the PropTypes we're gonna have our "createProfile" action. */
 CreateProfile.propTypes = {
-
+  createProfile: PropTypes.func.isRequired
 };
 
-export default CreateProfile;
+/* We don't need to pull any state in the props - so "mapStateToProps" is not needed as the first parameter. */
+export default connect(
+  null,
+  { createProfile }
+/* In order to use the "history" object (if we're gonna pass that in somewhere) we need to use "withRouter()" method. So here in the second set of the "connect()" parentheses we're gonna pass in "withRouter()" in which we're gonna pass in the "CreateProfile" component as an argument.
+If we don't do this, it's not gonna allow us to pass in that "history" object and use it from the action. */
+)(withRouter(CreateProfile));
