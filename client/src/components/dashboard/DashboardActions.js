@@ -1,0 +1,24 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+const DashboardActions = () => {
+  return (
+    <div className="dash-buttons">
+      {/* It's gonna take us to the route of the "/edit-profile", which will load the "EditProfile" component. */}
+      <Link to='/edit-profile' className="btn">
+        <i className="fas fa-user-circle text-primary"></i>{' '}
+        Edit Profile
+      </Link>
+      <Link to='/add-experience' className="btn">
+        <i className="fab fa-black-tie text-primary"></i>{' '}
+        Add Experience
+      </Link>
+      <Link to='/add-education' className="btn">
+        <i className="fas fa-graduation-cap text-primary"></i>{' '} 
+        Add Education
+      </Link>
+    </div>
+  );
+};
+
+export default DashboardActions;

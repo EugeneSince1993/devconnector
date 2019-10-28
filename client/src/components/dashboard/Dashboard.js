@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 // Bring in the connect() function from 'react-redux'.
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
+import DashboardActions from './DashboardActions';
 /* Bring in the "getCurrentProfile" action */
 import { getCurrentProfile } from '../../actions/profile';
 
@@ -24,7 +25,7 @@ const Dashboard = ({ getCurrentProfile, auth: { user }, profile: { profile, load
     <Fragment>
       <h1 className="large text-primary">Dashboard</h1>
       <p className="lead">
-        <i className="fas fa-user"></i> 
+        <i className="fas fa-user"></i>{' '}
         {/* If the "user" exists then show the "user.name".
             That uses the rule "condition then do something":
             condition && do_something 
@@ -34,7 +35,9 @@ const Dashboard = ({ getCurrentProfile, auth: { user }, profile: { profile, load
       {/* If the profile is not equal to null then let's put a Fragment, else let's put another Fragment.  */}
       { 
         profile !== null ? 
-          <Fragment>has</Fragment> : 
+          <Fragment>
+            <DashboardActions />
+          </Fragment> : 
           <Fragment>
             <p>You have not yet setup a profile, please add some info</p>
             <Link to='/create-profile' className="btn btn-primary my-1">

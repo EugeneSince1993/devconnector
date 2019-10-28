@@ -1,18 +1,28 @@
-import React, { Fragment, useState } from 'react';
+/* We have to have an "useEffect()" (hook) so that we can run the "getCurrentProfile()" action. So it will actually fetch the data and send it down to the state. */
+import React, { Fragment, useState, useEffect } from 'react';
 /* Just like we passed in the "history" object (in the "profile" actions file), we have to use something called "withRouter". "withRouter" will allow us to redirect from the action and use the "history" object. */
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-/* Bring in a "createProfile()" action - an action to create or update (edit) a profile. */ 
-import { createProfile } from '../../actions/profile';
+/* Bring in a "createProfile()" action - an action to create or update (edit) a profile.
+And also we bring in a "getCurrentProfile" action. We're gonna have to get the current profile, because we need to prefill the form fields. */ 
+import { createProfile, getCurrentProfile } from '../../actions/profile';
 
-/* We destructure the action of the "createProfile" and the "history" object from the "props".
+/* Destructuring.
+From the "profile" state we need a "profile" object (data about user) and a "loading". 
+We destructure the action of the "createProfile" and the "history" object from the "props".
 So this "createProfile" action we need to call on the form submit. */
-const CreateProfile = ({ createProfile, history }) => {
+const EditProfile = (
+  { profile: { profile, loading }, 
+  createProfile, 
+  getCurrentProfile, 
+  history 
+  }
+) => {
   /* In here we'll put the default values in the fields.
   That's the "formData" state with the default values.
   "setFormData" is a method to update the state. */
-  const [formData, setFormData] = useState({
+  const [ formData, setFormData ] = useState({
     company: '',
     website: '',
     location: '',
@@ -29,6 +39,32 @@ const CreateProfile = ({ createProfile, history }) => {
 
   /* "displaySocialInputs" is an another piece of state. It stores the group of the social media inputs. "toggleSocialInputs" is a method to update the "displaySocialInputs" state (to toggle - hide or show). The social inputs should be hidden by default. Default value will be "false" (so it will be a boolean value). */
   const [ displaySocialInputs, toggleSocialInputs ] = useState(false);
+
+  /* With the "useEffect()" hook it will keep reloading. So we need to put a set of the square brackets as a second argument of the "useEffect()". And inside them we'll put a prop. A prop we need to depend on is "loading" - so when it (data) loads that's when I want this ("useEffect()") to run. 
+  The first argument of the "useEffect()" is a function.  */
+  useEffect(() => {
+    /* Inside here we're gonna run a "getCurrentProfile()" action. */
+    getCurrentProfile();
+
+    /* We have to implement the "setFormData()" function, we're gonna need to fill the form with current profile values.
+    So after we get the profile, we're gonna call the "setFormData()" function. And we have to actually check. So we're gonna say: "the company (part (property) of the formData (state, object)), if it's "loading" or there is no "profile.company", then - have a blank field. If it's not "loading" and there is "profile.company", then fill it (this "company" field) with the "profile.company" data.".
+    That should fill up the form fields. */
+    setFormData({
+      company: loading || !profile.company ? '' : profile.company,
+      website: loading || !profile.website ? '' : profile.website,
+      location: loading || !profile.location ? '' : profile.location,
+      status: loading || !profile.status ? '' : profile.status,
+      skills: loading || !profile.skills ? '' : profile.skills.join(','),
+      githubusername: loading || !profile.githubusername ? '' : profile.githubusername,
+      bio: loading || !profile.bio ? '' : profile.bio,
+      /* We need to check to see if there is a "social" object (if that exists in the data). */
+      twitter: loading || !profile.social ? '' : profile.social.twitter,
+      facebook: loading || !profile.social ? '' : profile.social.facebook,
+      linkedin: loading || !profile.social ? '' : profile.social.linkedin,
+      youtube: loading || !profile.social ? '' : profile.social.youtube,
+      instagram: loading || !profile.social ? '' : profile.social.instagram
+    });
+  }, [loading]);
 
   /* Destructure all the props from the state. We're gonna pull all these fields from the formData. */
   const {
@@ -56,14 +92,15 @@ const CreateProfile = ({ createProfile, history }) => {
 
   const onSubmit = e => {
     e.preventDefault();
-    /* We're submitting all the fields that are in that "formData" state. */
-    createProfile(formData, history);
+    /* We're submitting all the fields that are in that "formData" state.
+    The third parameter of the createProfile() (action) is an "edit", and it's set to "false" by default. So we'll set an "edit" to "true". */
+    createProfile(formData, history, true);
   };
 
   return (
     <Fragment>
       <h1 className="large text-primary">
-        Create Your Profile
+        Edit Your Profile
       </h1>
       <p className="lead">
         <i className="fas fa-user"></i> 
@@ -242,15 +279,21 @@ const CreateProfile = ({ createProfile, history }) => {
   );
 };
 
-/* For the PropTypes we're gonna have our "createProfile" action. */
-CreateProfile.propTypes = {
-  createProfile: PropTypes.func.isRequired
+EditProfile.propTypes = {
+  createProfile: PropTypes.func.isRequired,
+  getCurrentProfile: PropTypes.func.isRequired,
+  profile: PropTypes.object.isRequired
 };
 
-/* We don't need to pull any state in the props - so "mapStateToProps" is not needed as the first parameter. */
+/* We need to bring in the "profile" state. */
+const mapStateToProps = state => ({
+  profile: state.profile
+});
+
+/* Everything that is passed as the parameter of the connect(), that will be in the "props" object. We can access that with "props.nameOfTheParameterWePassedInTheConnect". */
 export default connect(
-  null,
-  { createProfile }
+  mapStateToProps,
+  { createProfile, getCurrentProfile }
 /* In order to use the "history" object (if we're gonna pass that in somewhere) we need to use "withRouter()" method. So here in the second set of the "connect()" parentheses we're gonna pass in "withRouter()" in which we're gonna pass in the "CreateProfile" component as an argument.
 If we don't do this, it's not gonna allow us to pass in that "history" object and use it from the action. */
-)(withRouter(CreateProfile));
+)(withRouter(EditProfile)) ;
