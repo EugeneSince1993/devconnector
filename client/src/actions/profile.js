@@ -6,6 +6,7 @@ import { setAlert } from './alert';
 /* Import the action types */
 import {
   GET_PROFILE,
+  UPDATE_PROFILE,
   PROFILE_ERROR
 } from './types';
 
@@ -82,5 +83,88 @@ export const createProfile = (formData, history, edit = false) => async dispatch
       type: PROFILE_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status }
     });
+  }
+};
+
+/* Add an Experience.
+The "addExperience()" function (action) will take in formData. It also takes in a "history", because we need to redirect back to the dashboard afterwards.  */
+export const addExperience = (formData, history) => async dispatch => {
+  try {
+    /* Since we're sending data, we need to create our "config" object. */
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    /* We make a PUT request to update the needed data. We made the "experience" PUT request while we were working in the backend. */
+    const res = await axios.put('/api/profile/experience', formData, config);
+
+    dispatch({
+      type: UPDATE_PROFILE,
+      /* "res.data" will be a profile */
+      payload: res.data
+    });
+
+    dispatch(setAlert('Experience Added', 'success'));
+
+    /* Redirect to the Dashboard */
+    history.push('/dashboard');
+  } catch (err) {
+    /* We need our validation errors in an alert. "errors" is an array.
+    We get the errors from the "err.response.data.errors". And if there are any errors, then we loop through and we just output them in an alert.
+    So, for instance, if we forget the "status", "skills" or any required fields, then that will show in an alert. */
+    const errors = err.response.data.errors;
+
+    if (errors) {
+      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    /* Dispatch the profile error with the message and status. */
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
+/* Add an Education
+The "addEducation()" function (action) will take in formData. It also takes in a "history", because we need to redirect back to the dashboard afterwards. */
+export const addEducation = (formData, history) => async dispatch => {
+  try {
+    /* Since we're sending data, we need to create our "config" object. */
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    /* We make a PUT request to update the needed data. We made the "education" PUT request while we were working in the backend.
+    '/api/profile/education' is an endpoint. */
+    const res = await axios.put('/api/profile/education', formData, config);
+
+    dispatch({
+      type: UPDATE_PROFILE,
+      /* "res.data" will be a profile */
+      payload: res.data
+    });
+
+    dispatch(setAlert('Education Added', 'success'));
+
+    /* Redirect to the Dashboard */
+    history.push('/dashboard');
+  } catch (err) {
+      /* We need our validation errors in an alert. "errors" is an array.
+      We get the errors from the "err.response.data.errors". And if there are any errors, then we loop through and we just output them in an alert.
+      So, for instance, if we forget the "status", "skills" or any required fields, then that will show in an alert. */
+      const errors = err.response.data.errors;
+
+      if (errors) {
+        errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+      }
+
+      /* Dispatch the profile error with the message and status. */
+      dispatch({
+        type: PROFILE_ERROR,
+        payload: { msg: err.response.statusText, status: err.response.status }
+      });
   }
 };

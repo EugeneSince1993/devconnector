@@ -1,7 +1,8 @@
 import {
   GET_PROFILE,
   PROFILE_ERROR,
-  CLEAR_PROFILE
+  CLEAR_PROFILE,
+  UPDATE_PROFILE
 } from '../actions/types';
 
 /* default values */
@@ -25,10 +26,12 @@ export default function (state = initialState, action) {
   /* We'll run the switch() on the (action) type. */
   switch (type) {
     case GET_PROFILE:
+    case UPDATE_PROFILE:
       return {
         /* our current state */
         ...state,
-        /* We're sending the response back which includes the whole profile. So we're adding that (the whole profile) to the state. */
+        /* We're sending the response back which includes the whole profile. So we're adding that (the whole profile) to the state.
+        We're just filling the "profile" state. */
         profile: payload,
         /* We set "loading" to "false" once the request is done. */
         loading: false
