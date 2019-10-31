@@ -6,10 +6,12 @@ import { setAlert } from './alert';
 /* Import the action types */
 import {
   GET_PROFILE,
+  GET_PROFILES,
   UPDATE_PROFILE,
   PROFILE_ERROR,
   CLEAR_PROFILE,
-  ACCOUNT_DELETED
+  ACCOUNT_DELETED,
+  GET_REPOS
 } from './types';
 
 // Get the current user's profile
@@ -29,6 +31,68 @@ export const getCurrentProfile = () => async dispatch => {
     dispatch({
       type: PROFILE_ERROR,
       /* We're gonna send along the payload, because we have that "error" property in the initialState (in the "profile" reducer). So we're gonna send an object with a message ("msg"), and we can get the message text with "err.response.statusText". And then we also need to send the HTTP status which we can get with "err.response.status". That should give us like a "400" or whatever the status is. */
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
+// Get all profiles
+export const getProfiles = () => async dispatch => {
+  /* When we go to the profile list page, we need to clear whatever is in the current profile.         Because when we visit a single user's profile, it's gonna go into the state.
+     It will prevent the flashing of the past user's profile. */
+  dispatch({ type: CLEAR_PROFILE });
+
+  try {
+    /* That's gonna get an array (list) of all the profiles */
+    const res = await axios.get('/api/profile');
+
+    dispatch({
+      type: GET_PROFILES,
+      payload: res.data
+    });
+  } catch (err) {
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
+// Get profile by (the user) ID
+/* This function's gonna take in the "userId". We're specifically saying "userId", because we're not getting it (the profile) by the profile id, but the user id. */
+export const getProfileById = userId => async dispatch => {
+  try {
+    const res = await axios.get(`/api/profile/user/${userId}`);
+
+    /* We're gonna dispatch just the "GET_PROFILE" (action type), because we're filling that profile with the payload. */
+    dispatch({
+      type: GET_PROFILE,
+      payload: res.data
+    });
+  } catch (err) {
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
+// Get Github repos
+/* This action will take in the Github username.
+   We have the route on the backend that will return the repositories. */
+export const getGithubRepos = username => async dispatch => {
+  try {
+    const res = await axios.get(`/api/profile/github/${username}`);
+
+    dispatch({
+      type: GET_REPOS,
+      /* We're going to send the data which is gonna be the repos as the payload.  */
+      payload: res.data
+    });
+  } catch (err) {
+    /* All the profile errors we're doing the same way. */
+    dispatch({
+      type: PROFILE_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status }
     });
   }

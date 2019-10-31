@@ -1,5 +1,7 @@
 import {
   GET_PROFILE,
+  GET_PROFILES,
+  GET_REPOS,
   PROFILE_ERROR,
   CLEAR_PROFILE,
   UPDATE_PROFILE
@@ -36,6 +38,14 @@ export default function (state = initialState, action) {
         /* We set "loading" to "false" once the request is done. */
         loading: false
       };
+    case GET_PROFILES:
+      return {
+        /* All we really wanna do is fill the empty array ("profiles: []") with the profiles from the server. */
+        // current state
+        ...state,
+        profiles: payload,
+        loading: false
+      };
     case PROFILE_ERROR:
       return {
         /* everything that's currently in the state */
@@ -51,6 +61,15 @@ export default function (state = initialState, action) {
         profile: null,
         /* The profile could have GitHub repositories so we'll set the "repos" back to an "empty array". */
         repos: [],
+        loading: false
+      };
+    /*  We just wanna fill the "repos" (property, that's an array) part of state with the user          repositories. */
+    case GET_REPOS:
+      return {
+        // current state
+        ...state,
+        /* Let's fill the "repos" property with the payload. */
+        repos: payload,
         loading: false
       };
     default:
