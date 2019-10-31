@@ -5,7 +5,8 @@ import {
   AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
-  LOGOUT
+  LOGOUT,
+  ACCOUNT_DELETED
  } from '../actions/types';
 
     /*  
@@ -95,6 +96,7 @@ export default function (state = initialState, action) {
    case AUTH_ERROR:
    case LOGIN_FAIL:
    case LOGOUT:
+   case ACCOUNT_DELETED:
       /* for REGISTER_FAIL we're gonna remove anything that's
          in local storage in that token. Because if it is a
          failed login, I just wanna remove the token completely.
@@ -107,6 +109,7 @@ export default function (state = initialState, action) {
          token from the local storage.
          Basically we don't wanna have a token that isn't valid in
          the local storage ever.
+         We're adding "ACCOUNT_DELETED" into the "auth" reducer because we're clearing the profile, so that's gonna all get set back to "null". And then as for the "auth", we wanna make sure that the code like the "LOGOUT" one happens.
       */
      /* To reiterate - it's gonna remove the token and it's gonna set everything
      to "null". */

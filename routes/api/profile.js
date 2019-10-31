@@ -7,6 +7,7 @@ const { check, validationResult } = require('express-validator');
 
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
+const Post = require('../../models/Post');
 
 /* @route   GET api/profile/me - "api/profile/me" is the endpoint. This is
    protected route */
@@ -174,8 +175,11 @@ router.delete(
   auth, 
   async (req, res) => {
     try {
-      // @todo - remove user's posts
-
+      // Remove user posts
+      /* We wanna delete (the posts) where the user is equal to the logged in user. And we need to make sure we make this before we delete the user.
+      "req.user.id" is a logged in user.
+      So it will remove all the user's posts (in the "Remove user posts" operation), then remove a profile (in the "Remove profile" operation), and finally delete the account (in the "Remove user" operation). "the account is the same as the user". */
+      await Post.deleteMany({ user: req.user.id });
       // Remove profile
       await Profile.findOneAndRemove({ user: req.user.id });
       // Remove user

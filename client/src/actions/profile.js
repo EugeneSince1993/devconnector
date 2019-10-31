@@ -7,7 +7,9 @@ import { setAlert } from './alert';
 import {
   GET_PROFILE,
   UPDATE_PROFILE,
-  PROFILE_ERROR
+  PROFILE_ERROR,
+  CLEAR_PROFILE,
+  ACCOUNT_DELETED
 } from './types';
 
 // Get the current user's profile
@@ -166,5 +168,67 @@ export const addEducation = (formData, history) => async dispatch => {
         type: PROFILE_ERROR,
         payload: { msg: err.response.statusText, status: err.response.status }
       });
+  }
+};
+
+// Delete experience
+/* We need to hit the endpoint, we're gonna make DELETE request to the profile experience and the ID of the experience. the "deleteExperience()" is gonna take the experience id. */
+export const deleteExperience = id => async dispatch => {
+  try {
+    const res = await axios.delete(`/api/profile/experience/${id}`);
+
+    dispatch({
+      type: UPDATE_PROFILE,
+      payload: res.data
+    });
+
+    dispatch(setAlert('Experience Removed', 'success'));
+  } catch (err) {
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
+// Delete education
+/* We need to hit the endpoint, we're gonna make DELETE request to the profile education and the ID of the education. the "deleteEducation()" is gonna take the education id. */
+export const deleteEducation = id => async dispatch => {
+  try {
+    const res = await axios.delete(`/api/profile/education/${id}`);
+
+    dispatch({
+      type: UPDATE_PROFILE,
+      payload: res.data
+    });
+
+    dispatch(setAlert('Education Removed', 'success'));
+  } catch (err) {
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
+// Delete account & profile
+/* It's not gonna take any parameters in. It's gonna know the account from the token.  */
+export const deleteAccount = () => async dispatch => {
+  /* Since it's such a dangerous thing to do - delete your whole account - we definitely wanna a confirmation. So we'll just do "window.confirm()" in the condition. */
+  if (window.confirm('Are you sure? This can NOT be undone!')) {
+    try {
+      /* endpoint we hit is "/api/profile" with DELETE request */
+      const res = await axios.delete('/api/profile');
+
+      dispatch({ type: CLEAR_PROFILE });
+      dispatch({ type: ACCOUNT_DELETED});
+
+      dispatch(setAlert('Your account has been permanently deleted'));
+    } catch (err) {
+      dispatch({
+        type: PROFILE_ERROR,
+        payload: { msg: err.response.statusText, status: err.response.status }
+      });
+    }
   }
 };

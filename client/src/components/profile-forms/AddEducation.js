@@ -118,7 +118,7 @@ const AddEducation = ({ addEducation, history }) => {
             value={to} 
             onChange={e => onChange(e)} 
             /* If the "toDateDisabled" is "true" then set this (disabled attribute) to "disabled", else set this to '' (nothing).
-            And now if the "Current Learning" is checked, we shouldn't be able to add a "To Date", because it wouldn't make sense. */
+            And now if the "Current School" is checked, we shouldn't be able to add a "To Date", because it wouldn't make sense. */
             disabled={toDateDisabled ? 'disabled' : ''} 
           />
         </div>
@@ -149,7 +149,7 @@ const AddEducation = ({ addEducation, history }) => {
                 } 
               } 
             /> {' '}
-            Current Learning
+            Current School
           </p>
         </div>
         <div className="form-group">

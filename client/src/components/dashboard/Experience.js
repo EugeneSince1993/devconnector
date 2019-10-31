@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 /* We'll be using the "Moment" package here to format our dates. */
 import Moment from 'react-moment';
 import { connect } from 'react-redux';
+/* Bring in "deleteExperience()" action */
+import { deleteExperience } from '../../actions/profile';
 
 /* As far as props we're gonna have the experiences passed in from the parent component which is gonna be "Dashboard.js". So experiences will be passed in as the "experience" item. */
-const Experience = ({ experience }) => {
+const Experience = ({ experience, deleteExperience }) => {
   /* We have an access to the "experience" which is being passed in as a prop, and that's gonna be the array. We wanna map through that. "map()" takes in a function. So we're gonna say:
   "for each experience (exp) then we're gonna return some JSX.". So in here we're gonna have td, which is gonna have a key, and that key is gonna be the "exp._id".  */
   const experiences = experience.map(exp => (
@@ -24,8 +26,9 @@ const Experience = ({ experience }) => {
         }
       </td>
       <td>
-        {/* This is gonna have an "onClick", that calls an action. */}
-        <button className='btn btn-danger'>Delete</button>
+        {/* This is gonna have an "onClick", that calls an action.
+            In the JSX expression we just call the "deleteExperience()" and we pass in an ID into it. And that should delete the experience item. */}
+        <button onClick={() => deleteExperience(exp._id)} className='btn btn-danger'>Delete</button>
       </td>
     </tr>
   ));
@@ -54,7 +57,11 @@ const Experience = ({ experience }) => {
 
 Experience.propTypes = {
   /* "experience" is an array. */
-  experience: PropTypes.array.isRequired
+  experience: PropTypes.array.isRequired,
+  deleteExperience: PropTypes.func.isRequired
 };
 
-export default Experience;
+export default connect(
+  null,
+  { deleteExperience }
+)(Experience);

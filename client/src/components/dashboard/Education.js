@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 /* We'll be using the "Moment" package here to format our dates. */
 import Moment from 'react-moment';
 import { connect } from 'react-redux';
+/* Bring in "deleteEducation()" action */
+import { deleteEducation } from '../../actions/profile';
 
-/* As far as props we're gonna have the educations (learnings) passed in from the parent component which is gonna be "Dashboard.js". So educations (learnings) will be passed in as the "education" item. */
-const Education = ({ education }) => {
+/* As far as props we're gonna have the educations (learnings, schools) passed in from the parent component which is gonna be "Dashboard.js". So educations (learnings, schools) will be passed in as the "education" item. */
+const Education = ({ education, deleteEducation }) => {
   /* We have an access to the "education" which is being passed in as a prop, and that's gonna be the array. We wanna map through that. "map()" takes in a function. So we're gonna say:
   "for each education (edu) then we're gonna return some JSX.". So in here we're gonna have td, which is gonna have a key, and that key is gonna be the "exp._id".  */
   const educations = education.map(edu => (
@@ -24,8 +26,9 @@ const Education = ({ education }) => {
         }
       </td>
       <td>
-        {/* This is gonna have an "onClick", that calls an action. */}
-        <button className='btn btn-danger'>Delete</button>
+        {/* This is gonna have an "onClick", that calls an action.
+            In the JSX expression we just call the "deleteEducation()" and we pass in an ID into it. And that should delete the education item. */}
+        <button onClick={() => deleteEducation(edu._id)} className='btn btn-danger'>Delete</button>
       </td>
     </tr>
   ));
@@ -54,7 +57,11 @@ const Education = ({ education }) => {
 
 Education.propTypes = {
   /* "education" is an array. */
-  education: PropTypes.array.isRequired
+  education: PropTypes.array.isRequired,
+  deleteEducation: PropTypes.func.isRequired
 };
 
-export default Education;
+export default connect(
+  null,
+  { deleteEducation }
+)(Education);
