@@ -130,6 +130,7 @@ router.get(
   '/',
   async (req, res) => {
     try {
+      /* With "populate()" function we add the "user" object with the properties of "name" and "avatar" to the profile item object. Also the "user._id" property will be added there. */
       const profiles = await Profile.find()
                         .populate('user', ['name', 'avatar']);
       res.json(profiles);
