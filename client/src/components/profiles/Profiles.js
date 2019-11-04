@@ -15,7 +15,8 @@ const Profiles = ({ getProfiles, profile: { profiles, loading } }) => {
      So that should put the profiles in the state. */
   useEffect(() => {
     getProfiles();
-  }, []);
+    /* Add the "getProfiles" as a dependency of the "useEffect". That will should get rid from the warning (in the console) about "React Hook" in this file. The array below is actually the dependency array. */
+  }, [getProfiles]);
   return (
     <Fragment>
       {/* 

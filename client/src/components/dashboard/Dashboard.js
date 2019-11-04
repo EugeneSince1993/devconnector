@@ -23,7 +23,8 @@ const Dashboard = (
   /* Since we only want this to run once, we need to put an empty set of square brackets (empty array) as a second parameter. */
   useEffect(() => {
     getCurrentProfile();
-  }, []);
+    /* Add the "getCurrentProfile" as a dependency of the "useEffect". That will should get rid from the warning (in the console) about "React Hook" in this file. The array below is actually the dependency array. */
+  }, [getCurrentProfile]);
 
   /* If the profile is null and it's still loading (if loading: true and profile === null),
   then we're gonna show the spinner.  */

@@ -64,7 +64,8 @@ const EditProfile = (
       youtube: loading || !profile.social ? '' : profile.social.youtube,
       instagram: loading || !profile.social ? '' : profile.social.instagram
     });
-  }, [loading]);
+    /* Add the dependencies of the "useEffect". That will should get rid from the warning (in the console) about "React Hook" in this file. The array below is actually the dependency array. */
+  }, [loading, getCurrentProfile]);
 
   /* Destructure all the props from the state. We're gonna pull all these fields from the formData. */
   const {
