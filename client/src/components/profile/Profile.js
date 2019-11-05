@@ -4,6 +4,10 @@ import { Link } from 'react-router-dom';
 /* Bring in the "connect()" method. */
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
+/* Bring in the ProfileTop component. */
+import ProfileTop from './ProfileTop';
+/* Bring in the ProfileAbout component. */
+import ProfileAbout from './ProfileAbout';
 /* Bring in the "getProfileById()" action (function).
 We want that to run right away. */
 import { getProfileById } from '../../actions/profile';
@@ -27,9 +31,9 @@ const Profile = (
       So that will run immediately when the profile mounts (loads).
     */
     getProfileById(match.params.id);
-    /* Add the "getProfileById" as a dependency of the "useEffect". That will should get rid from the warning (in the console) about "React Hook" in this file. The array below is actually the dependency array.
+    /* Add the "getProfileById" and the "match.params.id" as a dependency of the "useEffect". That will should get rid from the warning (in the console) about "React Hook" in this file. The array below is actually the dependency array.
     */
-  }, [getProfileById]);
+  }, [getProfileById, match.params.id]);
 
   return (
     <Fragment>
@@ -53,6 +57,12 @@ const Profile = (
                   </Link>
                 )
             }
+            <div className="profile-grid my-1">
+              {/* We pass in the profile data as a prop.
+                  Simply with "<ProfileAbout />" we pass in the layout. And with the "profile={profile}" attribute ("prop") we pass in the dynamic data that we can change any time by editing our profile. */}
+              <ProfileTop profile={profile} />
+              <ProfileAbout profile={profile} />
+            </div>
           </Fragment>
       }
     </Fragment>
