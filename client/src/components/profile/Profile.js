@@ -12,6 +12,8 @@ import ProfileAbout from './ProfileAbout';
 import ProfileExperience from './ProfileExperience';
 /* Bring in the ProfileEducation component. */
 import ProfileEducation from './ProfileEducation';
+/* Bring in the ProfileGithub component. */
+import ProfileGithub from './ProfileGithub';
 /* Bring in the "getProfileById()" action (function).
 We want that to run right away. */
 import { getProfileById } from '../../actions/profile';
@@ -108,6 +110,13 @@ const Profile = (
                   )
                 }
               </div>
+              {/* We wanna check to see if there is a "githubusername". If that exists then ("&&") we're gonna go ahead and display (add) the ProfileGithub component and pass the "username" prop into it.
+              We need the "username" (prop) because we're gonna be calling that "getGithubRepos()" action (the "profile" action) from the ProfileGithub component. Earlier we were passing the "username" (as a prop) into the "getGithubRepos()" action (the "profile" action). */}
+              { 
+                profile.githubusername && (
+                  <ProfileGithub username={profile.githubusername} />
+                ) 
+              }
             </div>
           </Fragment>
       }
