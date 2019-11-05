@@ -8,6 +8,10 @@ import Spinner from '../layout/Spinner';
 import ProfileTop from './ProfileTop';
 /* Bring in the ProfileAbout component. */
 import ProfileAbout from './ProfileAbout';
+/* Bring in the ProfileExperience component. */
+import ProfileExperience from './ProfileExperience';
+/* Bring in the ProfileEducation component. */
+import ProfileEducation from './ProfileEducation';
 /* Bring in the "getProfileById()" action (function).
 We want that to run right away. */
 import { getProfileById } from '../../actions/profile';
@@ -62,6 +66,48 @@ const Profile = (
                   Simply with "<ProfileAbout />" we pass in the layout. And with the "profile={profile}" attribute ("prop") we pass in the dynamic data that we can change any time by editing our profile. */}
               <ProfileTop profile={profile} />
               <ProfileAbout profile={profile} />
+              <div className="profile-exp bg-white p-2">
+                <h2 className="text-primary">Experience</h2>
+                {/* We need to make sure that there is something in that "experience" array.
+                    If there is, then we need to map (loop) through the "experience" array. */}
+                { 
+                  profile.experience.length > 0 ? (
+                    <Fragment>
+                      { 
+                        profile.experience.map(experience => (
+                          /* This is where we show (add) the ProfileExperience component.
+                            And this is gonna take in a key, since we're iterating through (the array). And then we need to pass in the actual experience (prop). */
+                            <ProfileExperience key={experience._id} experience={experience} />
+                          )
+                        )
+                      }
+                    </Fragment>
+                  ) : ( 
+                    <h4>No experience credentials</h4>
+                  )
+                }
+              </div>
+              <div className="profile-edu bg-white p-2">
+                <h2 className="text-primary">Education</h2>
+                {/* We need to make sure that there is something in that "education" array.
+                    If there is, then we need to map (loop) through the "education" array. */}
+                {
+                  profile.education.length > 0 ? (
+                    <Fragment>
+                      {
+                        profile.education.map(education => (
+                          /* This is where we show (add) the ProfileEducation component.
+                            And this is gonna take in a key, since we're iterating through (the array). And then we need to pass in the actual education (prop). */
+                            <ProfileEducation key={education._id} education={education} />
+                          )
+                        )
+                      }
+                    </Fragment>
+                  ) : (
+                    <h4>No education credentials</h4>
+                  )
+                }
+              </div>
             </div>
           </Fragment>
       }
