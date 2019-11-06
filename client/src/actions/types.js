@@ -21,3 +21,5 @@ export const CLEAR_PROFILE = 'CLEAR_PROFILE';
 export const PROFILE_ERROR = 'PROFILE_ERROR';
 /* The account will be deleted on the server. And this is basically a side effect from that. */
 export const ACCOUNT_DELETED = 'ACCOUNT_DELETED';
+export const GET_POSTS = 'GET_POSTS';
+export const POST_ERROR = 'POST_ERROR';
