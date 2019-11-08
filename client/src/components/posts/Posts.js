@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 /* Bring in "connect()" function */
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
+import PostItem from './PostItem';
 /* Bring in the "getPosts()" action */
 import { getPosts } from '../../actions/post';
 
@@ -16,9 +17,32 @@ const Posts = ({ getPosts, post: { posts, loading } }) => {
   }, [getPosts]);
 
   return (
-    <div>
-
-    </div>
+    <Fragment>
+      {/* We wanna make sure that it (the data) is not loading:
+          "If it is loading, then ('?') let's show the spinner. Else (":") then load a Fragment with the actual data." */}
+      { 
+        loading ? 
+          <Spinner /> : 
+          (
+            <Fragment>
+              <h1 className="large text-primary">Posts</h1>
+              <p className="lead">
+                <i className="fas fa-user"></i> Welcome to the community
+              </p>
+              {/* Post Form */}
+              <div className="posts">
+                {/* We wanna map through our "posts" array.
+                    For each post we wanna load a "PostItem" component. We need to pass in a key (prop) which will be the "post._id", and then we pass the actual post data (prop). */}
+                {
+                  posts.map(post => (
+                    <PostItem key={post._id} post={post} />
+                  ))
+                }
+              </div>
+            </Fragment>
+          )
+      }   
+    </Fragment>
   );
 };
 
