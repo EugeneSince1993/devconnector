@@ -23,3 +23,5 @@ export const PROFILE_ERROR = 'PROFILE_ERROR';
 export const ACCOUNT_DELETED = 'ACCOUNT_DELETED';
 export const GET_POSTS = 'GET_POSTS';
 export const POST_ERROR = 'POST_ERROR';
+/* We want the "UPDATE_LIKES" action type to fire off whether we like or unlike a post. */
+export const UPDATE_LIKES = 'UPDATE_LIKES';
