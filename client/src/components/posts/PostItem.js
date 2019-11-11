@@ -6,14 +6,15 @@ import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
 /* The reason we're bringing in the "connect()" here is we're gonna have a bunch of actions like "add like", "remove like", "delete a post". */
 import { connect } from 'react-redux';
-/* Bring in the "addLike()" and the "removeLike()" actions. */
-import { addLike, removeLike } from '../../actions/post';
+/* Bring in the "addLike()", the "removeLike()" and the "deletePost()" actions. */
+import { addLike, removeLike, deletePost } from '../../actions/post';
 
 /* From the "post" (object) that's passed in the PostItem component, we're gonna destructure that ("post" object) and pull out the "_id", "text", "name", "avatar", "user", "likes", "comments", "date". We also pass in the "addLike()" and the "removeLike()" actions, and also the "auth" state. */
 const PostItem = (
   { 
     addLike,
     removeLike,
+    deletePost,
     auth, 
     post: {
       _id,
@@ -83,7 +84,9 @@ const PostItem = (
         { 
           !auth.loading && user === auth.user._id && 
             (
-              <button type="button" className="btn btn-danger">
+              /* Add an event handler.
+                 And in the "onClick" function body we're gonna run the "deletePost()" (action) with the "_id" as an argument (because we need to pass in the post id). */
+              <button onClick={e => deletePost(_id)} type="button" className="btn btn-danger">
                 <i className="fas fa-times"></i>
               </button>
             ) 
@@ -96,6 +99,7 @@ const PostItem = (
 PostItem.propTypes = {
   addLike: PropTypes.func.isRequired,
   removeLike: PropTypes.func.isRequired,
+  deletePost: PropTypes.func.isRequired,
   /* "post" object that's passed in the PostItem component. */
   post: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired
@@ -108,5 +112,5 @@ const mapStateToProps = state => ({
 /* We're gonna need the "auth" state, so we'll do "mapStateToProps()". And then we're gonna bring the "auth" state, because we need to tell who is who. So that the delete button shows up only on user when the posts belong to him. */
 export default connect(
   mapStateToProps,
-  { addLike, removeLike }
+  { addLike, removeLike, deletePost }
 )(PostItem);

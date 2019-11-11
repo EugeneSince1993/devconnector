@@ -1,7 +1,9 @@
+/* Bring in the action types. */
 import {
   GET_POSTS,
   POST_ERROR,
-  UPDATE_LIKES
+  UPDATE_LIKES,
+  DELETE_POST
 } from '../actions/types';
 
 const initialState = {
@@ -26,6 +28,17 @@ export default function (state = initialState, action) {
         ...state,
         /* We fill the "posts" array with the "payload". The "payload" will come from the "post" action file. */
         posts: payload,
+        loading: false
+      };
+    /* We just wanna filter out the post that got deleted. */
+    case DELETE_POST:
+      return {
+        // the current state
+        ...state,
+        /* We just want to edit posts (the "posts" array) by filtering through.
+           For each "post" we're gonna match the following: "post._id" is not equal to the "payload". Because the "payload" is just the id.
+           So we're just returning all posts except for the one that matches the condition. Because that's the one that got deleted. So we wanna just immediately remove that from the UI. */
+        posts: state.posts.filter(post => post._id !== payload),
         loading: false
       };
     /* For the post error, we just wanna fill the error (object) with the "payload" (which comes from the "post" action file). */

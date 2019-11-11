@@ -2,11 +2,12 @@
 import axios from 'axios';
 /* We'll be using alerts at some point so we might as well bring in the "setAlert()" action from the "alert" actions file. */
 import { setAlert } from './alert';
-/* Brin in the action types. */
+/* Bring in the action types. */
 import {
   GET_POSTS,
   POST_ERROR,
-  UPDATE_LIKES
+  UPDATE_LIKES,
+  DELETE_POST
 } from './types';
 
 /* Get posts (a function to get posts) */
@@ -61,6 +62,29 @@ export const removeLike = id => async dispatch => {
       type: UPDATE_LIKES,
       payload: { id, likes: res.data }
     });
+  } catch (err) {
+    dispatch({
+      type: POST_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
+// Delete post
+/* This action is gonna take in an id. (because) It needs to know which one (post) to delete. We're gonna make a DELETE request. */
+export const deletePost = id => async dispatch => {
+  try {
+    const res = await axios.delete(`/api/posts/${id}`);
+
+    dispatch({
+      type: DELETE_POST,
+      /* For the payload we're just gonna send the id so that in reducer we know how to filter out the post that got deleted from the UI. */
+      payload: id
+    });
+
+    /* We do an alert here saying that the post has been deleted.
+       We brought in the "setAlert()" action (earlier) in the top of this actions file. */
+    dispatch(setAlert('Post Removed', 'success'));
   } catch (err) {
     dispatch({
       type: POST_ERROR,
