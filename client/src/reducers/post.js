@@ -3,7 +3,8 @@ import {
   GET_POSTS,
   POST_ERROR,
   UPDATE_LIKES,
-  DELETE_POST
+  DELETE_POST,
+  ADD_POST
 } from '../actions/types';
 
 const initialState = {
@@ -28,6 +29,15 @@ export default function (state = initialState, action) {
         ...state,
         /* We fill the "posts" array with the "payload". The "payload" will come from the "post" action file. */
         posts: payload,
+        loading: false
+      };
+    case ADD_POST:
+      return {
+        // The current state ("state" object)
+        ...state,
+        /* All we have to do here is assign to the "posts" (array) the (current) array with the (current state) "...state.posts". So basically it just makes a copy of it. And then we wanna just add a new post which is in the "payload". We kinda update the "posts" array with the new post. The first array item is "with what we update (what we add)" (the new post). And the second array item is "what we update" (the "posts" array).
+        That will return our (new) post down to our component. Any component that uses the "posts" part of this "state", it's gonna return that down with the new post. */
+        posts: [ payload, ...state.posts],
         loading: false
       };
     /* We just wanna filter out the post that got deleted. */

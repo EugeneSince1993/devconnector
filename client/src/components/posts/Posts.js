@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import PostItem from './PostItem';
+import PostForm from './PostForm';
 /* Bring in the "getPosts()" action */
 import { getPosts } from '../../actions/post';
 
@@ -29,7 +30,7 @@ const Posts = ({ getPosts, post: { posts, loading } }) => {
               <p className="lead">
                 <i className="fas fa-user"></i> Welcome to the community
               </p>
-              {/* Post Form */}
+              <PostForm />
               <div className="posts">
                 {/* We wanna map through our "posts" array.
                     For each post we wanna load a "PostItem" component. We need to pass in a key (prop) which will be the "post._id", and then we pass the actual post data (prop). */}

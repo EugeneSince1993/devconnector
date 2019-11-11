@@ -7,7 +7,8 @@ import {
   GET_POSTS,
   POST_ERROR,
   UPDATE_LIKES,
-  DELETE_POST
+  DELETE_POST,
+  ADD_POST
 } from './types';
 
 /* Get posts (a function to get posts) */
@@ -74,7 +75,8 @@ export const removeLike = id => async dispatch => {
 /* This action is gonna take in an id. (because) It needs to know which one (post) to delete. We're gonna make a DELETE request. */
 export const deletePost = id => async dispatch => {
   try {
-    const res = await axios.delete(`/api/posts/${id}`);
+    /* Making the DELETE request. We don't need the "res" variable here. */
+    await axios.delete(`/api/posts/${id}`);
 
     dispatch({
       type: DELETE_POST,
@@ -85,6 +87,34 @@ export const deletePost = id => async dispatch => {
     /* We do an alert here saying that the post has been deleted.
        We brought in the "setAlert()" action (earlier) in the top of this actions file. */
     dispatch(setAlert('Post Removed', 'success'));
+  } catch (err) {
+    dispatch({
+      type: POST_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
+// Add post
+export const addPost = formData => async dispatch => {
+  /* We add a "config" object since we're sending data. We'll have headers (object) in the "config" object. */
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+
+  try {
+    /* It's a POST request since we're adding the data. */
+    const res = await axios.post('/api/posts', formData, config);
+
+    dispatch({
+      type: ADD_POST,
+      /* The payload will be the data we get back - which will be the (new) post. */
+      payload: res.data
+    });
+
+    dispatch(setAlert('Post Created', 'success'));
   } catch (err) {
     dispatch({
       type: POST_ERROR,

@@ -26,3 +26,4 @@ export const POST_ERROR = 'POST_ERROR';
 /* We want the "UPDATE_LIKES" action type to fire off whether we like or unlike a post. */
 export const UPDATE_LIKES = 'UPDATE_LIKES';
 export const DELETE_POST = 'DELETE_POST';
+export const ADD_POST = 'ADD_POST';

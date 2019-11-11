@@ -31,14 +31,15 @@ const PostItem = (
   return (
     <div className="post bg-white p-1 my-1">
       <div>
-        <a href="profile.html">
+        {/* In fact, when we click this link, we'll be redirected kinda to the "/profile/user_id". e.g., "http://localhost:3000/profile/5da5b2b52a36970a0017f500" (Brad's profile page). */}
+        <Link to={`/profile/${user}`}>
           <img
             className="round-img"
             src={avatar}
             alt="avatar"
           />
           <h4>{name}</h4>
-        </a>
+        </Link>
       </div>
       <div>
         <p className="my-1">
