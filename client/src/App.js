@@ -13,6 +13,7 @@ import AddEducation   from './components/profile-forms/AddEducation';
 import Profiles       from './components/profiles/Profiles';
 import Profile        from './components/profile/Profile';
 import Posts          from './components/posts/Posts';
+import Post           from './components/post/Post';
 import PrivateRoute   from './components/routing/PrivateRoute';
 
 // Redux
@@ -58,6 +59,8 @@ const App = () => {
               <PrivateRoute exact path='/add-education' component={AddEducation} />
               {/* It's a private route, because you have to be logged in to view posts. */}
               <PrivateRoute exact path='/posts' component={Posts} />
+              {/* This route is gonna load the Post component. */}
+              <PrivateRoute exact path='/posts/:id' component={Post} />
             </Switch>
           </section>
         </Fragment>

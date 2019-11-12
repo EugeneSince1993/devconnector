@@ -5,6 +5,7 @@ import { setAlert } from './alert';
 /* Bring in the action types. */
 import {
   GET_POSTS,
+  GET_POST,
   POST_ERROR,
   UPDATE_LIKES,
   DELETE_POST,
@@ -17,7 +18,8 @@ export const getPosts = () => async dispatch => {
     /* axios returns a promise so we put an await keyword. */
     const res = await axios.get('/api/posts');
 
-    /* It's just gonna get the posts. And then that will put it (the posts) into the state. */
+    /* Dispatch the data into the "post" reducer.
+       It's just gonna get the posts. And then that will put it (the posts) into the state. */
     dispatch({
       type: GET_POSTS,
       payload: res.data
@@ -115,6 +117,25 @@ export const addPost = formData => async dispatch => {
     });
 
     dispatch(setAlert('Post Created', 'success'));
+  } catch (err) {
+    dispatch({
+      type: POST_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
+// Get post
+export const getPost = id => async dispatch => {
+  try {
+    const res = await axios.get(`/api/posts/${id}`);
+
+    /* Dispatch the data into the "post" reducer.
+       The payload will be the single post. */
+    dispatch({
+      type: GET_POST,
+      payload: res.data
+    });
   } catch (err) {
     dispatch({
       type: POST_ERROR,

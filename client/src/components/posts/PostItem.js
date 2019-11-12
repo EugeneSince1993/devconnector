@@ -25,7 +25,8 @@ const PostItem = (
       likes,
       comments,
       date
-    } 
+    },
+    showActions
   }
 ) => {
   return (
@@ -49,52 +50,64 @@ const PostItem = (
           {/* We need to pass in a format. */}
           Posted on <Moment format='YYYY/MM/DD'>{date}</Moment>
         </p>
-        {/* We need to add a click event handler to the "like" button.
-            And when this button is clicked, we're gonna call an "addLike()". We can get the "id" (from the action) with the "_id". Because in the component parameters we pulled out (destructured) the "_id" from the "post" (object). */}
-        <button onClick={e => addLike(_id)} type="button" className="btn btn-light">
-          <i className="fas fa-thumbs-up"></i>{' '}
-          {/* We need to make sure that there are some likes before we decide to do the "{likes.length}". "likes" is an array. the "{likes.length}" expression will tell us how many likes this post has.  */}
-          {
-            likes.length > 0 &&
-              (
-                <span>
-                  {likes.length}
-                </span>
-              )
-          }
-        </button>
-        {/* We add a click event handler to the "unlike" button. */}
-        <button onClick={e => removeLike(_id)} type="button" className="btn btn-light">
-          <i className="fas fa-thumbs-down"></i>
-        </button>
-        <Link to={`/post/${_id}`} className="btn btn-primary">
-          Discussion{' '}          
-          {/* We need to make sure that there are some comments before we decide to do the "{comments.length}". "comments" is an array. the "{comments.length}" expression will tell us how many comments this post has.  */}
-          { 
-            comments.length > 0 && 
-              (
-                <span className='comment-count'>
-                  {comments.length}
-                </span>
-              ) 
-          }
-        </Link>
-        {/* We only want it (the "delete post" button) to show if it's the (current) user's post:
-            "If not 'auth.loading' and ("&&") 'user === auth.user._id'." 
-            So the first 'user' is the post user ("post.user"), and the second one is the logged-in user ("auth.user._id"). So we wanna make sure that those match. If they do then ("&&" - if we have no "else" statement) we wanna show the "delete post" button. */}
-        { 
-          !auth.loading && user === auth.user._id && 
-            (
-              /* Add an event handler.
-                 And in the "onClick" function body we're gonna run the "deletePost()" (action) with the "_id" as an argument (because we need to pass in the post id). */
-              <button onClick={e => deletePost(_id)} type="button" className="btn btn-danger">
-                <i className="fas fa-times"></i>
+        {/* If the "showActions" (prop) is "true", then ("&&") let's do a Fragment with the 4 "action" buttons within it. */}
+        {
+          showActions && (
+            <Fragment>
+              {/* We need to add a click event handler to the "like" button.
+                  And when this button is clicked, we're gonna call an "addLike()". We can get the "id" (from the action) with the "_id". Because in the component parameters we pulled out (destructured) the "_id" from the "post" (object). */}
+              <button onClick={e => addLike(_id)} type="button" className="btn btn-light">
+                <i className="fas fa-thumbs-up"></i>{' '}
+                {/* We need to make sure that there are some likes before we decide to do the "{likes.length}". "likes" is an array. the "{likes.length}" expression will tell us how many likes this post has.  */}
+                {
+                  likes.length > 0 &&
+                    (
+                      <span>
+                        {likes.length}
+                      </span>
+                    )
+                }
               </button>
-            ) 
+              {/* We add a click event handler to the "unlike" button. */}
+              <button onClick={e => removeLike(_id)} type="button" className="btn btn-light">
+                <i className="fas fa-thumbs-down"></i>
+              </button>
+              <Link to={`/posts/${_id}`} className="btn btn-primary">
+                Discussion{' '}          
+                {/* We need to make sure that there are some comments before we decide to do the "{comments.length}". "comments" is an array. the "{comments.length}" expression will tell us how many comments this post has.  */}
+                { 
+                  comments.length > 0 && 
+                    (
+                      <span className='comment-count'>
+                        {comments.length}
+                      </span>
+                    ) 
+                }
+              </Link>
+              {/* We only want it (the "delete post" button) to show if it's the (current) user's post:
+                  "If not 'auth.loading' and ("&&") 'user === auth.user._id'." 
+                  So the first 'user' is the post user ("post.user"), and the second one is the logged-in user ("auth.user._id"). So we wanna make sure that those match. If they do then ("&&" - if we have no "else" statement) we wanna show the "delete post" button. */}
+              { 
+                !auth.loading && user === auth.user._id && 
+                  (
+                    /* Add an event handler.
+                      And in the "onClick" function body we're gonna run the "deletePost()" (action) with the "_id" as an argument (because we need to pass in the post id). */
+                    <button onClick={e => deletePost(_id)} type="button" className="btn btn-danger">
+                      <i className="fas fa-times"></i>
+                    </button>
+                  ) 
+              }
+            </Fragment>
+          )
         }
       </div>
     </div>
   );
+};
+
+/* We want the "showActions" (prop) to be "true" by default. So we're gonna add the "defaultProps". And we set the "showActions" (prop) to "true". If the "showActions" prop is true, then the 4 action buttons are shown, if false - then they aren't shown. */
+PostItem.defaultProps = {
+  showActions: true
 };
 
 PostItem.propTypes = {

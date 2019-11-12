@@ -1,6 +1,7 @@
 /* Bring in the action types. */
 import {
   GET_POSTS,
+  GET_POST,
   POST_ERROR,
   UPDATE_LIKES,
   DELETE_POST,
@@ -29,6 +30,14 @@ export default function (state = initialState, action) {
         ...state,
         /* We fill the "posts" array with the "payload". The "payload" will come from the "post" action file. */
         posts: payload,
+        loading: false
+      };
+    case GET_POST:
+      return {
+        // The current state ("state" object)
+        ...state,
+        /* The "post" is just gonna be the "payload". Because it's just sending that single post. We're gonna update that in the state. */
+        post: payload,
         loading: false
       };
     case ADD_POST:
