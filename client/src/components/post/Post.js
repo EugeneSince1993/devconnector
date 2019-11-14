@@ -9,6 +9,8 @@ import Spinner from '../layout/Spinner';
 import PostItem from '../posts/PostItem';
 /* Bring in the "CommentForm" component. */
 import CommentForm from './CommentForm';
+/* Bring in the "CommentItem" component */
+import CommentItem from './CommentItem';
 /* Bring in the "getPost" action. */
 import { getPost } from '../../actions/post';
 
@@ -33,6 +35,17 @@ const Post = ({ getPost, post: { post, loading }, match }) => {
         <PostItem post={post} showActions={false} />
         {/* We need to pass the "postId" as a prop. */}
         <CommentForm postId={post._id} />
+        <div className="comments">
+          {/* We map through our comments (the "comments" array):
+              "For each 'comment' let's show a 'CommentItem' (component)."
+              And this needs a "key" with a value of the "comment._id". And then we pass in a "comment" as a prop ("comment={comment}"). We also want the post id ("postId"). */}
+          { 
+            post.comments.map(comment => (
+                <CommentItem key={comment._id} comment={comment} postId={post._id} />
+              )
+            ) 
+          }
+        </div>
       </Fragment>
   );
 };
