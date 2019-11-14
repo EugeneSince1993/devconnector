@@ -5,7 +5,9 @@ import {
   POST_ERROR,
   UPDATE_LIKES,
   DELETE_POST,
-  ADD_POST
+  ADD_POST,
+  ADD_COMMENT,
+  REMOVE_COMMENT
 } from '../actions/types';
 
 const initialState = {
@@ -88,6 +90,36 @@ export default function (state = initialState, action) {
             } :
             post
         ),
+        loading: false
+      };
+    case ADD_COMMENT:
+      return {
+        // The current state ("state" object)
+        ...state,
+        /* We only need to edit the "post" part of the state. That's the "post" object, since this (comment) is gonna be on the single post page. 
+        It's an object, we want whatever is in it currently, so we'll put the "...state.post" (first object property). And then we wanna manipulate the "comments" (second object property, array). We wanna replace it with the "payload". Because the "payload" is just all the comments. 
+        The first object property is "what we update" (the "post" object, which is in the current state). And the second object property is "with what we update (what we add)" (the new comment(-s) (from the "payload") - in the "comments" array). */
+        post: { ...state.post, comments: payload },
+        loading: false
+      };
+    case REMOVE_COMMENT:
+      return {
+        ...state,
+        /* For the "post" (object) we need to filter out the comment (that should be removed). So we want the current stuff that's in the "post" ("...state.post"). And then for the "comments" (array) we need to filter through. So we're gonna say:
+        "'state.post.comments' which is that array ('comments')". 
+        And then let's do a "filter()":
+        "For each 'comment' we wanna filter out anything that is the comment with the specific id.".
+        So let's say:
+        "Where ('when') 'comment._id' is equal to the 'payload'.
+        The first object property is "what we update" (the "post" object, which is in the current state). And the second object property is "with what we update" (we remove the specific comment from the 'comments' array, and return the updated 'comments' array)."
+        */
+        post: {
+          ...state.post,
+          /* This "payload" should be the "id" (the "commentId"). The "filter()" array method will do so that we'll return all the comments except the specific comment we need to remove.
+          We want to bring in all the comments except the one with that id, because that was just deleted from the server. So we wanna delete it from the state and from the UI.
+          The filter() method creates a new array with all elements that pass the test implemented by the provided function. */
+          comments: state.post.comments.filter(comment => comment._id !== payload)
+        },
         loading: false
       };
     default:

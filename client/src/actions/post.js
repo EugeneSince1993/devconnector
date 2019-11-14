@@ -9,7 +9,9 @@ import {
   POST_ERROR,
   UPDATE_LIKES,
   DELETE_POST,
-  ADD_POST
+  ADD_POST,
+  ADD_COMMENT,
+  REMOVE_COMMENT
 } from './types';
 
 /* Get posts (a function to get posts) */
@@ -77,7 +79,7 @@ export const removeLike = id => async dispatch => {
 /* This action is gonna take in an id. (because) It needs to know which one (post) to delete. We're gonna make a DELETE request. */
 export const deletePost = id => async dispatch => {
   try {
-    /* Making the DELETE request. We don't need the "res" variable here. */
+    /* Making the DELETE request. We don't need the "res" variable here (in other words, it's not mandatory). */
     await axios.delete(`/api/posts/${id}`);
 
     dispatch({
@@ -136,6 +138,54 @@ export const getPost = id => async dispatch => {
       type: GET_POST,
       payload: res.data
     });
+  } catch (err) {
+    dispatch({
+      type: POST_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
+// Add comment
+export const addComment = (postId, formData) => async dispatch => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+
+  try {
+    const res = await axios.post(`/api/posts/comment/${postId}`, formData, config);
+
+    dispatch({
+      type: ADD_COMMENT,
+      /* We just send the data. Because when we add a comment, it returns the "comments" array. So that's what we're gonna get back and that's what we're gonna send as the payload. */
+      payload: res.data
+    });
+
+    dispatch(setAlert('Comment Added', 'success'));
+  } catch (err) {
+    dispatch({
+      type: POST_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
+// Delete comment
+/* We want the "commentId" (prop, value) so we know which comment to delete. We don't need the "config" object, because all the data is in the "params". */
+export const deleteComment = (postId, commentId) => async dispatch => {
+  try {
+    /* We could delete the "res" variable (but Brad didn't that), because it's not being used here. We could left only the actual "await axios.delete(`/api/posts/comment/${postId}/${commentId}`);" operation (command). */
+    const res = await axios.delete(`/api/posts/comment/${postId}/${commentId}`);
+
+    dispatch({
+      type: REMOVE_COMMENT,
+      /* The "payload" is the "commentId", so we know which comment to remove in the state and within the UI. */
+      payload: commentId
+    });
+
+    dispatch(setAlert('Comment Removed', 'success'));
   } catch (err) {
     dispatch({
       type: POST_ERROR,

@@ -7,6 +7,8 @@ import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 /* Bring in the "PostItem" component. We're importing the PostItem component, showing the same post item for the single post, except that we hide the 4 action buttons. */
 import PostItem from '../posts/PostItem';
+/* Bring in the "CommentForm" component. */
+import CommentForm from './CommentForm';
 /* Bring in the "getPost" action. */
 import { getPost } from '../../actions/post';
 
@@ -29,6 +31,8 @@ const Post = ({ getPost, post: { post, loading }, match }) => {
           Back To Posts
         </Link>
         <PostItem post={post} showActions={false} />
+        {/* We need to pass the "postId" as a prop. */}
+        <CommentForm postId={post._id} />
       </Fragment>
   );
 };
