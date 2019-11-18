@@ -19,7 +19,7 @@ app.use('/api/posts', require('./routes/api/posts'));
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
   // Set static folder
-  app.use(express.static('client/build/'));
+  app.use(express.static('client/build'));
 
   /* The "*" means "all the routes except the 4 ones that we've defined above". */
   app.get('*', (req, res) => {
@@ -27,6 +27,6 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
