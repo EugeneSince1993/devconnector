@@ -11,5 +11,8 @@
   Run <strong>"npm run dev"</strong> to start the local server.
 </p>
 <p>
+  Additional:
+</p>
+<p>
   Run <strong>"npm audit fix"</strong> in the <strong>"client"</strong> folder if you need to fix the vulnerabilities.
 </p>
