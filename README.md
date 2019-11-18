@@ -14,5 +14,5 @@
   Additionally:
 </p>
 <p>
-  Run <strong>"npm audit fix"</strong> in the <strong>"client"</strong> folder if you need to fix the vulnerabilities.
+  Run <strong>"npm audit fix"</strong> if you need to fix the vulnerabilities.
 </p>
