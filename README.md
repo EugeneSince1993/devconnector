@@ -1,5 +1,5 @@
 <p>
-  Clone this application.
+  Clone or download this application.
 </p>
 <p>
   Run <strong>"npm install"</strong> in the <strong>"devconnector"</strong> folder to install all the server dependencies.
